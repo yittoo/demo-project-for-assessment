@@ -1,0 +1,44 @@
+@import "../../styles/mixins";
+
+.ReposList {
+  @include flex-column;
+  .ReposListItem {
+    display: flex;
+    margin: $spacing-very-small 0;
+    transition: background-color 0.3s ease-out;
+    &.TitleWrapper {
+      &:hover {
+        background-color: $white;
+      }
+    }
+    &:nth-child(2n) {
+      background-color: $extra-very-light-background;
+    }
+    .Index {
+      flex: 0 0 40px;
+      text-align: center;
+    }
+    &:hover {
+      background-color: $very-light-background;
+    }
+    & > * {
+      border: 1px solid $light-border;
+      padding: 0.8rem;
+      &:first-child {
+        border-radius: 4px 0 0 4px;
+      }
+      &:not(:last-child) {
+      }
+    }
+    .ColWide {
+      flex: 1;
+    }
+  }
+  &--Loading {
+    min-height: 60vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 4rem;
+  }
+}

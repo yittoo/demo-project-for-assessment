@@ -1,0 +1,9 @@
+@import "../styles/mixins";
+
+.Index {
+  @include container;
+  .PageTitle,
+  .FooterHello {
+    text-align: center;
+  }
+}

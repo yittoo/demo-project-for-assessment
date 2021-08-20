@@ -1,0 +1,12 @@
+@import "./variables";
+
+@mixin container {
+  max-width: $general-max-width;
+  margin: 0 auto;
+  width: 90%;
+}
+
+@mixin flex-column {
+  display: flex;
+  flex-direction: column;
+}

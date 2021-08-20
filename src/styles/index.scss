@@ -1,0 +1,15 @@
+@import "variables.scss";
+
+* {
+  margin: 0;
+  padding: 0;
+  font-family: inherit;
+  box-sizing: inherit;
+}
+
+html {
+  font-family: $font-main;
+  box-sizing: border-box;
+  // make 1 rem into 10px instead of 16px
+  font-size: 62.5%;
+}
