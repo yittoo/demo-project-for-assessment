@@ -76,4 +76,27 @@ describe("useGithubLinkHeaderPaginatedFetch", () => {
       await sleep(1000);
     });
   });
+  it("should return `fetchFailed` when api returns error", async () => {
+    server.use(
+      rest.get(exampleUri, (req, res, { status, delay, json }) => {
+        return res(
+          status(500),
+          delay(10),
+          json({ Error: "Interval Server Error" })
+        );
+      })
+    );
+    const TestComponentRenderer = TestRenderer.create(
+      <TestComponent url={exampleUri} />
+    );
+
+    const component = TestComponentRenderer.root.children[0];
+    await act(async () => {
+      setTimeout(() => {
+        expect(component.props.nextUrl).toBeFalsy();
+        expect(component.props.fetchFailed).toBeTruthy();
+      }, 200);
+      await sleep(1000);
+    });
+  });
 });
