@@ -114,7 +114,6 @@ export const PublicReposList: React.FunctionComponent<IPublicReposList> = ({
   const filterFavoritesFromList = (itemToCheckId: number) => {
     return favorites.findIndex((fav) => fav.id === itemToCheckId) === -1;
   };
-  console.log(favorites);
 
   if (githubLinkHeaderPaginatedFetch.fetchFailed) return renderError();
   if (githubLinkHeaderPaginatedFetch.loading) return renderLoading();
