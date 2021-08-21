@@ -4,6 +4,7 @@
   @include flex-column;
   .ReposListItem {
     display: flex;
+    flex-wrap: wrap;
     margin: $spacing-very-small 0;
     transition: background-color 0.3s ease-out;
     &.TitleWrapper {
@@ -16,7 +17,7 @@
     }
     .Index {
       flex: 0 0 40px;
-      text-align: center;
+      justify-content: center;
     }
     &:hover {
       background-color: $very-light-background;
@@ -31,7 +32,22 @@
       }
     }
     .ColWide {
-      flex: 1;
+      flex: 1 1;
+    }
+    .EllipsisOverflow {
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+    .Favorite {
+      flex: 0 0 4.2rem;
+      @media only screen and (max-width: 360px) {
+        flex: 0 0 5rem;
+      }
+    }
+    .AlignTextVertically {
+      display: flex;
+      align-items: center;
     }
   }
   &--Loading {

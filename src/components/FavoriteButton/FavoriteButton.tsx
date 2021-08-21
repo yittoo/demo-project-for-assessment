@@ -1,10 +1,10 @@
-import React, { ButtonHTMLAttributes } from "react";
+import React from "react";
 
 import Icon from "../ui/Icon/Icon";
 import s from "./FavoriteButton.module.scss";
 
 export interface IFavoriteButtonProps
-  extends React.HTMLAttributes<HTMLButtonElement> {
+  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   isFavorite?: boolean;
 }
 

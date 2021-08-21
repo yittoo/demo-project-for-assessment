@@ -50,6 +50,8 @@ export const useGithubLinkHeaderPaginatedFetch = <T>(
     fetchData(url, options).then((res) =>
       handleResponse(res, handleResponseOptions.clearPrevious)
     );
+    // remove dependency warning as we want to run this on mount only
+    // eslint-disable-next-line
   }, []);
 
   async function fetchData(
@@ -89,10 +91,10 @@ export const useGithubLinkHeaderPaginatedFetch = <T>(
           setResponseBody(body);
           break;
         case handleResponseOptions.appendAtBeginning:
-          setResponseBody([...oldBody, ...body]);
+          setResponseBody([...body, ...oldBody]);
           break;
         case handleResponseOptions.appendAtEnd:
-          setResponseBody([...body, ...oldBody]);
+          setResponseBody([...oldBody, ...body]);
           break;
         default:
           setResponseBody(body);

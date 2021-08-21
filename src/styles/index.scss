@@ -12,4 +12,8 @@ html {
   box-sizing: border-box;
   // make 1 rem into 10px instead of 16px
   font-size: 62.5%;
+  @media only screen and (max-width: 360px) {
+    // make 1 rem into 8px
+    font-size: 50%;
+  }
 }

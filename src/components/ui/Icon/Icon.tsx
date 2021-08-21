@@ -1,7 +1,7 @@
 import React from "react";
 
 export type IconTypes = "heart-empty" | "heart-fill";
-export interface IIconProps extends React.HtmlHTMLAttributes<HTMLOrSVGElement> {
+export interface IIconProps extends React.ImgHTMLAttributes<HTMLImageElement> {
   iconType: IconTypes;
 }
 
@@ -9,7 +9,11 @@ export interface IIconProps extends React.HtmlHTMLAttributes<HTMLOrSVGElement> {
 // SVG in img but might need a tricky hack like this to avoid copy pasting
 // same lines over again for each icon which loads all icons whether they
 // are used or not
-const Icon: React.FunctionComponent<IIconProps> = ({ iconType, ...rest }) => {
+const Icon: React.FunctionComponent<IIconProps> = ({
+  iconType,
+  alt,
+  ...rest
+}) => {
   let iconUrl = null;
 
   try {
@@ -20,7 +24,7 @@ const Icon: React.FunctionComponent<IIconProps> = ({ iconType, ...rest }) => {
     return null;
   }
 
-  return <img {...rest} src={iconUrl} />;
+  return <img {...rest} alt={alt} src={iconUrl} />;
 };
 
 export default Icon;

@@ -1,0 +1,8 @@
+@import "../../../styles/variables";
+
+.ExternalLink {
+  &:link,
+  &:visited {
+    color: $link;
+  }
+}

@@ -1,6 +1,6 @@
 import React from "react";
 import FavoriteButton from "../../components/FavoriteButton/FavoriteButton";
-import { Paragraph, Loader } from "../../components/ui/";
+import { Paragraph, Loader, ExternalLink } from "../../components/ui/";
 
 import { useGithubLinkHeaderPaginatedFetch } from "../../hooks/useGithubLinkHeaderPaginatedFetch";
 import {
@@ -46,9 +46,12 @@ export const PublicReposList: React.FunctionComponent<IPublicReposList> = ({
       </div>
     );
   };
-  const favoriteClickedHandler = (favoriteData: IRepository) => {
-    dispatch(actions.toggleFavorite(favorites, favoriteData));
-  };
+  const favoriteClickedHandler = React.useCallback(
+    (favoriteData: IRepository) => {
+      dispatch(actions.toggleFavorite(favorites, favoriteData));
+    },
+    [dispatch, actions, favorites]
+  );
 
   const renderReposList = (reposData: IRepository[]) => {
     return (
@@ -56,12 +59,11 @@ export const PublicReposList: React.FunctionComponent<IPublicReposList> = ({
         <PublicRepoItem
           className={s.TitleWrapper}
           owner={"Repository Owner"}
-          item_id={"#"}
           html_url={"Repo Url"}
           name={"Repo Name"}
-          index={"Repository ID"}
+          index={"#"}
           onFavoriteButtonClicked={() => function () {}}
-          isFavorite
+          isTitle
         />
         {renderFavorites()}
         {renderNonFavoriteRepos(reposData)}
@@ -81,7 +83,7 @@ export const PublicReposList: React.FunctionComponent<IPublicReposList> = ({
       <PublicRepoItem
         key={githubRepoData.id}
         owner={githubRepoData.owner.login}
-        item_id={githubRepoData.id}
+        owner_url={githubRepoData.owner.html_url}
         html_url={githubRepoData.html_url}
         name={githubRepoData.name}
         index={index + 1}
@@ -89,12 +91,7 @@ export const PublicReposList: React.FunctionComponent<IPublicReposList> = ({
         isFavorite
       />
     ));
-    // this check to re-calc function is not 100% healthy reason is
-    // if in future we add a websocket which items live or something like that
-    // repo name might be edited and we'd not update the favorites list
-    // most likely would rarely ever happen but on a similar scenario
-    // in production affect UX
-  }, [favorites?.length]);
+  }, [favorites, favoriteClickedHandler]);
 
   // thought about another useCallback here to prevent re-render, though all the actions
   // happening in our application affects this part's dependency all the time
@@ -106,7 +103,7 @@ export const PublicReposList: React.FunctionComponent<IPublicReposList> = ({
         <PublicRepoItem
           key={githubRepoData.id}
           owner={githubRepoData.owner.login}
-          item_id={githubRepoData.id}
+          owner_url={githubRepoData.owner.html_url}
           html_url={githubRepoData.html_url}
           name={githubRepoData.name}
           index={index + favorites?.length + 1}
@@ -117,6 +114,7 @@ export const PublicReposList: React.FunctionComponent<IPublicReposList> = ({
   const filterFavoritesFromList = (itemToCheckId: number) => {
     return favorites.findIndex((fav) => fav.id === itemToCheckId) === -1;
   };
+  console.log(favorites);
 
   if (githubLinkHeaderPaginatedFetch.fetchFailed) return renderError();
   if (githubLinkHeaderPaginatedFetch.loading) return renderLoading();
@@ -145,7 +143,7 @@ export default function ReposListWithFavorites() {
 export interface IPublicRepoItemProps
   extends React.HtmlHTMLAttributes<HTMLDivElement> {
   owner: string;
-  item_id: number | string;
+  owner_url?: string;
   html_url: string;
   name: string;
   index: number | string;
@@ -156,7 +154,7 @@ export interface IPublicRepoItemProps
 
 const PublicRepoItem: React.FunctionComponent<IPublicRepoItemProps> = ({
   owner,
-  item_id,
+  owner_url,
   html_url,
   name,
   index,
@@ -170,25 +168,69 @@ const PublicRepoItem: React.FunctionComponent<IPublicRepoItemProps> = ({
   return (
     <div {...rest} className={classes.join(" ")}>
       {isTitle ? (
-        <Paragraph />
+        <Paragraph
+          className={[s.Favorite, s.AlignTextVertically].join(" ")}
+          bold
+        >
+          Fav
+        </Paragraph>
       ) : (
         <FavoriteButton
+          className={[s.Favorite, s.AlignTextVertically].join(" ")}
           isFavorite={isFavorite}
           onClick={() => onFavoriteButtonClicked()}
         />
       )}
-      <Paragraph className={s.Index} bold={isTitle}>
+      <Paragraph
+        className={[s.Index, s.AlignTextVertically].join(" ")}
+        bold={isTitle}
+      >
         {index}
       </Paragraph>
-      {/* <Paragraph bold={isTitle} className={s.ColWide}>
-        {item_id}
-      </Paragraph> */}
-      <Paragraph bold={isTitle} className={s.ColWide}>
-        {name}
-      </Paragraph>
-      <Paragraph bold={isTitle} className={s.ColWide}>
-        {owner}
-      </Paragraph>
+      {isTitle ? (
+        <Paragraph
+          bold
+          className={[
+            s.ColWide,
+            s.EllipsisOverflow,
+            s.AlignTextVertically,
+          ].join(" ")}
+        >
+          {name}
+        </Paragraph>
+      ) : (
+        <Paragraph
+          className={[
+            s.ColWide,
+            s.EllipsisOverflow,
+            s.AlignTextVertically,
+          ].join(" ")}
+        >
+          <ExternalLink href={html_url}>{name}</ExternalLink>
+        </Paragraph>
+      )}
+      {isTitle ? (
+        <Paragraph
+          bold
+          className={[
+            s.ColWide,
+            s.EllipsisOverflow,
+            s.AlignTextVertically,
+          ].join(" ")}
+        >
+          {owner}
+        </Paragraph>
+      ) : (
+        <Paragraph
+          className={[
+            s.ColWide,
+            s.EllipsisOverflow,
+            s.AlignTextVertically,
+          ].join(" ")}
+        >
+          <ExternalLink href={owner_url}>{owner}</ExternalLink>
+        </Paragraph>
+      )}
     </div>
   );
 };
